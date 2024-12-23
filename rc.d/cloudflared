@@ -16,31 +16,40 @@ rcvar="${name}_enable"
 
 start_cmd="${name}_start"
 stop_cmd="${name}_stop"
+status_cmd="${name}_status"
 
 load_rc_config $name
 
 cloudflared_start() {
-	if [ ! -f /var/run/cloudflared.pid ]
-	then
-		echo -n "Starting cloudflared"
-		/usr/local/bin/cloudflared tunnel &
-		echo $! > /var/run/cloudflared.pid
-		echo "."
-	else
-		echo "cloudflared is already running!"
-	fi
+        if [ ! -f /var/run/cloudflared.pid ]
+        then
+                echo -n "Starting cloudflared"
+                /usr/local/bin/cloudflared tunnel run &
+                echo $! > /var/run/cloudflared.pid
+                echo "."
+        else
+                echo "cloudflared is already running!"
+        fi
 }
 
 cloudflared_stop() {
-	if [ ! -f /var/run/cloudflared.pid ]
-	then
-		echo "cloudflared is not running"
-	else
-		echo -n "Stopping cloudflared"
-		kill `cat /var/run/cloudflared.pid`
-		rm /var/run/cloudflared.pid
-		echo "."
-	fi
+        if [ ! -f /var/run/cloudflared.pid ]
+        then
+                echo "cloudflared is not running"
+        else
+                echo -n "Stopping cloudflared"
+                kill `cat /var/run/cloudflared.pid`
+                rm /var/run/cloudflared.pid
+                echo "."
+        fi
 }
 
+cloudflared_status() {
+        if [ ! -f /var/run/cloudflared.pid ]
+        then
+                echo "cloudflared is not running!"
+        else
+                echo "cloudflared is running as PID" `cat /var/run/cloudflared.pid`
+        fi
+}
 run_rc_command "$1"
