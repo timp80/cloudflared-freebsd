@@ -27,9 +27,10 @@ The `cert.pem` file should be moved to where `cloudflared` can find it e.g.
 4. Create `/usr/local/etc/cloudflared/config.yml`
 
 ```yaml
-logfile: /var/log/cloudflared/cloudflared.log
-url: ssh://localhost:22
-hostname: ssh.example.com
+tunnel: tunnel-id
+credential-file: /path/to/cloudflared-credential-file.json
+warp-routing:
+  enabled: true
 ```
 
 5. Copy the [rc.d file](/rc.d/cloudflared) to `/usr/local/etc/rc.d`
